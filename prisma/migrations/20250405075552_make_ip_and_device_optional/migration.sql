@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "device" DROP NOT NULL,
+ALTER COLUMN "ip" DROP NOT NULL;
