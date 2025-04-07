@@ -4,8 +4,25 @@ const prisma = new PrismaClient();
 
 async function findAll(req, res) {
   try {
-    let all = await prisma.product.findMany();
-    res.send(all);
+    const { page = 1, limit = 10, sort, name } = req.query;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const take = parseInt(limit);
+
+    let filters = {};
+    if (name) {
+      filters.name = { contains: name, mode: 'insensitive' };
+    }
+    let all = await prisma.product.findMany({ where: filters, take, skip });
+
+    if (sort) {
+      if (sort == 'name') {
+        all.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sort == '-name') {
+        all.sort((a, b) => b.name.localeCompare(a.name));
+      }
+    }
+    res.send({ data: all });
   } catch (error) {
     res.send(error);
   }

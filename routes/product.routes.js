@@ -9,12 +9,49 @@ const productRoute = Router();
  * @swagger
  * /products:
  *   get:
- *     summary: Get all products
- *     tags: [Products]
+ *     summary: Get all products with pagination, filtering, and sorting
+ *     tags:
+ *       - Products
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: Filter products by name (partial match, case-insensitive)
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [name, -name]
+ *         description: Sort products by name. Use 'name' for ascending, '-name' for descending.
  *     responses:
  *       200:
- *         description: A list of all products
+ *         description: A list of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Product'
+ *       500:
+ *         description: Internal server error
  */
+
 productRoute.get('/', findAll);
 
 /**
